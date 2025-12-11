@@ -1,0 +1,46 @@
+[build-syste]
+requires =["setuptools", "python>=3.13"]
+build-backend = ["setuptools.build_meta"]
+
+[project]
+version = "1.0.0"
+name = "infovideobot"
+description = "Bot with LLM for take some info from video"
+authors = [{name = "Klimov Artem", email = "artemklimovwork@gmail.com"}]
+readme = "README.md"
+dependencies = [
+    "aiogram",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "ty",
+    "pre-commit",
+    "bandit"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.ruff]
+cache-dir = "~/.cache/ruff"
+line-length = 120
+output-format = "grouped"
+show-fixes = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+lines-after-imports = 2
+
+[tool.pytest]
+addopts = ["-vv"]
+minversion = "9.0"
+cache_dir = "~/.cache/pytest"
+pythonpath = [".venv"]
+testpaths = [
+    "tests",
+]
+console_output_style = "count"
