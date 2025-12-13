@@ -24,7 +24,8 @@ handlers:
   file:
     class: logging.FileHandler
     level: DEBUG
-    filename: ../logs/bot.log
+    filename: ext://settings.LOG_FILE
+    mode: w
     formatter: struct
 loggers:
   main:

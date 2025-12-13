@@ -11,12 +11,12 @@ from dotenv import load_dotenv
 import yaml
 
 import routers
-
+import settings
 
 load_dotenv()
 
 try:
-    with open('../.log-config.yaml', 'r') as file:
+    with open(settings.LOG_CONFIG_FILE, 'r') as file:
         config = yaml.safe_load(file)
         logging_config.dictConfig(config)
 except yaml.YAMLError as e:
@@ -37,12 +37,13 @@ async def main() -> None:
         raise ValueError("Переменная BOT_TOKEN не определена.")
         logger.error("Переменная BOT_TOKEN не определена.")
 
-    session = aiohttp.AiohttpSession(proxy="http://proxy.server:3128")
+    # Enable for pythonanywher
+    # session = aiohttp.AiohttpSession(proxy="http://proxy.server:3128")
 
     bot = Bot(
         token=BOT_TOKEN,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-        session=session
+ #       session=session
     )
 
     await bot.delete_webhook(drop_pending_updates=True)
