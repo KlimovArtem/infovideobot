@@ -3,7 +3,7 @@ requires =["setuptools", "python>=3.13"]
 build-backend = ["setuptools.build_meta"]
 
 [project]
-version = "1.0.0"
+version = "0.0.1"
 name = "infovideobot"
 description = "Bot with LLM for take some info from video"
 authors = [{name = "Klimov Artem", email = "artemklimovwork@gmail.com"}]
@@ -14,6 +14,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+pythonanywhere = [
+    "aiohttp-socks"
+]
 dev = [
     "pytest",
     "ruff",

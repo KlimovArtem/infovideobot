@@ -1,24 +1,34 @@
 version: 1
 formatters:
-  structured: 
-    format: '{"timestamp": "%(asctime)s",\n"filename": %(filename)s,\n"levelname": "%(levelname)s",\n"message": %(message)s}'
-    datefmt: "%Y-%m-%d %H:%M:%S"
+  struct:
+      format: |
+        {
+          "timestamp": "%(asctime)s",
+          "record": {
+            "level": "%(levelname)s",
+            "module": "%(module)s",
+            "filename": "%(filename)s",
+            "message": "%(message)s"
+          }
+        }
+      datefmt: "%Y-%m-%d %H:%M:%S"
   default:
     format: "%(asctime)s | [%(levelname)s]: %(message)s"
     datefmt: "%Y-%m-%d %H:%M:%S"
 handlers:
-  file:
-    class: logging.FileHandler
-    filename: bot.log
-    level: logging.DEBUG
-    formatter: structured
   console:
     class: logging.StreamHandler
+    level: INFO
     stream: ext://sys.stdout
-    level: logging.INFO
-logger:
+    formatter: default
+  file:
+    class: logging.FileHandler
+    level: DEBUG
+    filename: ../logs/bot.log
+    formatter: struct
+loggers:
   main:
-    level: logging.DEBUG
-    handlers: [file, console]
-    propagate: no
-
+    level: DEBUG
+    handlers:
+      - console
+      - file
