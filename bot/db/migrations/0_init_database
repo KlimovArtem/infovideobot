@@ -1,0 +1,28 @@
+
+CREATE TABLE IF NOT EXISTS videos(
+  id UUID PRIMARY KEY NOT NULL UNIQUE,
+  creator_id UUID NOT NULL UNIQUE,
+  video_created_at TIMESTAMP,
+  views_count INT,
+  likes_count INT,
+  comments_count INT,
+  reports_count INT,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS video_snapshots(
+    id UUID PRIMARY KEY NOT NULL UNIQUE,
+    video_id UUID,
+    FOREIGN KEY (video_id) REFERENCES videos(id),
+    views_count INT,
+    likes_count INT,
+    comments_count INT,
+    reports_count INT,
+    delta_views_count INT,
+    delta_likes_count INT,
+    delta_comment_count INT,
+    delta_reports_count INT,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);

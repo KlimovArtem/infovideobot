@@ -11,6 +11,9 @@ readme = "README.md"
 dependencies = [
     "aiogram",
     "python-dotenv",
+    "ollama",
+    "asyncpg",
+    "pyyaml"
 ]
 
 [project.optional-dependencies]
@@ -35,7 +38,7 @@ output-format = "grouped"
 show-fixes = true
 
 [tool.ruff.lint.isort]
-known-first-party = ["app"]
+known-first-party = ["bot"]
 lines-after-imports = 2
 
 [tool.pytest]

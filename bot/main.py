@@ -2,16 +2,19 @@ import asyncio
 import logging
 import logging.config as logging_config
 import os
+import sys
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram.client.session import aiohttp
 from aiogram.enums import ParseMode
+import asyncpg
 from dotenv import load_dotenv
 import yaml
 
 import routers
 import settings
+from db import migrate
+
 
 load_dotenv()
 
@@ -43,17 +46,32 @@ async def main() -> None:
     bot = Bot(
         token=BOT_TOKEN,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
- #       session=session
+#       session=session
     )
 
     await bot.delete_webhook(drop_pending_updates=True)
 
     dp = Dispatcher()
     dp.include_routers(routers.router)
+
     logger.info("Запуск бота...")
+    logger.info("Соединение с БД...")
+
+    connection = await asyncpg.connect(os.getenv("DB_URL"))
+    version = connection.get_server_version()
+    await connection.close()
+
+    logger.debug(f"Проверка подключения к БД, версия БД: {version}")
+    if version:
+        logger.info("БД подключена.")
+    
+    connection = await asyncpg.connect(os.getenv("DB_URL"))
+    await migrate.apply_pending_migrations(connection)
+    await connection.close()
+
     await dp.start_polling(bot)
 
-
 if __name__ == "__main__":
-    asyncio.run(main())
+        asyncio.run(main())
+
 

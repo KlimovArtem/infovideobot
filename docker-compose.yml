@@ -1,0 +1,33 @@
+version: '3.0'
+
+services:
+  db:
+    image: postgres:13.10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env.production
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
+      interval: 20s
+      timeout: 40s
+      retries: 5
+  ollama:
+    image: ollama/ollama
+    command: ollama pull gemma3
+    volumes: 
+      - ollama:/root/.ollama
+
+  infovideobot:
+    build: .
+    command: python bot/main.py
+    volumes:
+      - .:/usr/src/app/
+    env_file:
+      - .env.production
+    ports:
+      - 80:80
+
+volumes:
+  postgres_data:
+  ollama:
