@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_DIR = Path(__file__).parent.parent
+BASE_DIR = Path(__file__).parent.parent.parent
 
 LOG_CONFIG_FILE = BASE_DIR / ".log-config.yaml"
 

@@ -2,7 +2,6 @@ import asyncio
 import logging
 import logging.config as logging_config
 import os
-import sys
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
@@ -64,7 +63,7 @@ async def main() -> None:
     logger.debug(f"Проверка подключения к БД, версия БД: {version}")
     if version:
         logger.info("БД подключена.")
-    
+
     connection = await asyncpg.connect(os.getenv("DB_URL"))
     await migrate.apply_pending_migrations(connection)
     await connection.close()
@@ -72,6 +71,6 @@ async def main() -> None:
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
-        asyncio.run(main())
+    asyncio.run(main())
 
 

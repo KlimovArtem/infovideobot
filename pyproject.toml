@@ -29,7 +29,7 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = [".", "src"]
 
 [tool.ruff]
 cache-dir = "~/.cache/ruff"
@@ -38,7 +38,7 @@ output-format = "grouped"
 show-fixes = true
 
 [tool.ruff.lint.isort]
-known-first-party = ["bot"]
+known-first-party = ["bot", "db", "utils"]
 lines-after-imports = 2
 
 [tool.pytest]

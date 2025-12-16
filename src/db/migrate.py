@@ -1,6 +1,6 @@
-
 from pathlib import Path
-from db.db_adapters import postgres as db_adapter
+
+from db_adapters import postgres as db_adapter
 
 
 async def create_table(connection):
@@ -10,8 +10,8 @@ async def create_table(connection):
             name TEXT NOT NULL,
             migrated_at TIMESTAMP NOT NULL DEFAULT NOW()
         );"""
-
-    await connection.execute(query)
+    async with db_adapter.database.pool.acquire() as connection:
+        await connection.execute(query)
 
 async def get_pending_migrations(connection):
     migrations = []
@@ -34,11 +34,12 @@ async def get_pending_migrations(connection):
     migrations = sorted(migrations, key=lambda m: m['version'])
     return migrations
 
-async def apply_pending_migrations(connection):
-    await create_table(connection)
-    migrations = await get_pending_migrations(connection)
+async def apply_pending_migrations():
+    await create_table()
+    migrations = await get_pending_migrations()
+    async with db_adapter.database.pool.aqcurie() as connection:
+        async with connection.transaction():
+            for migration in migrations:
+                await connection.execute(migration["content"])
+                await connection.execute("INSERT INTO schema_migrations (version, name) VALUES ($1, $2)", migration["version"], migration["name"])
 
-    async with connection.transaction():
-        for migration in migrations:
-            await connection.execute(migration["content"])
-            await connection.execute("INSERT INTO schema_migrations (version, name) VALUES ($1, $2)", migration["version"], migration["name"])
